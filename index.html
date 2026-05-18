@@ -1,6 +1,3 @@
-
-Copy
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -91,7 +88,7 @@ header{background:var(--caramel);padding:0.9rem 2rem;display:flex;align-items:ce
 .card:hover .zoom-hint{opacity:1}
 .card-body{padding:1rem 1.2rem 1.2rem;flex:1;display:flex;flex-direction:column;gap:5px}
 .card-name{font-family:Cambria,serif;font-size:1.05rem;font-weight:700;color:var(--caramel);line-height:1.3}
-.card-weight{font-size:0.78rem;color:var(--muted);display:flex;align-items:center;gap:4px;margin-top:2px;font-style:italic}
+.card-weight{font-size:0.78rem;color:var(--muted);display:flex;align-items:center;gap:4px;margin-top:2px;font-style:italic;text-transform:capitalize}
 .card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:10px;border-top:1px solid var(--border)}
 .price{font-family:Cambria,serif;font-size:1.25rem;font-weight:700;color:var(--raisin)}
 .price-sub{font-size:0.67rem;color:var(--muted);display:block;margin-top:-2px;font-style:italic}
@@ -183,7 +180,7 @@ footer a:hover{text-decoration:underline}
     <option value="default">Default order</option>
     <option value="price-asc">Price: Low to High</option>
     <option value="price-desc">Price: High to Low</option>
-    <option value="weight-asc">Weight: Light to Heavy</option>
+    <option value="size-asc">Size: A to Z</option>
     <option value="name-asc">Name: A to Z</option>
   </select>
 </div>
@@ -300,7 +297,7 @@ function render() {
   });
   if (sort === 'price-asc')  list.sort((a,b) => +a.price - +b.price);
   if (sort === 'price-desc') list.sort((a,b) => +b.price - +a.price);
-  if (sort === 'weight-asc') list.sort((a,b) => +a.weight - +b.weight);
+  if (sort === 'size-asc') list.sort((a,b) => (a.size||'').localeCompare(b.size||''));
   if (sort === 'name-asc')   list.sort((a,b) => a.name.localeCompare(b.name));
   currentList = list;
   const grid  = document.getElementById('grid');
@@ -323,7 +320,7 @@ function render() {
       </div>
       <div class="card-body">
         <div class="card-name">${p.name}</div>
-        ${p.weight ? `<div class="card-weight"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>${p.weight}g</div>` : ''}
+        ${p.size ? `<div class="card-weight"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>${p.size}</div>` : ''}
         <div class="card-footer">
           <div><span class="price">${price}</span><span class="price-sub">made to order</span></div>
           <a class="order-btn" href="${waLink}" target="_blank" onclick="event.stopPropagation()">
@@ -342,7 +339,7 @@ function openLightbox(idx) {
   document.getElementById('lb-img').alt = p.name;
   document.getElementById('lb-name').textContent = p.name;
   const price = p.price ? '₹' + Number(p.price).toLocaleString('en-IN') : '';
-  document.getElementById('lb-price').textContent = price + (p.weight ? '  ·  ' + p.weight + 'g' : '');
+  document.getElementById('lb-price').textContent = price + (p.size ? '  ·  ' + p.size : '');
   const msg = encodeURIComponent('Hi KALP 3D! I am interested in ordering: ' + p.name + ' (' + price + ')');
   document.getElementById('lb-order').href = 'https://wa.me/' + WA_NUM + '?text=' + msg;
   document.getElementById('lightbox').classList.add('open');
